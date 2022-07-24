@@ -20,12 +20,7 @@ def dfs(di1, di2, di1_index, count):
         return
 
     for di2_index in range(2*N):
-        # i, j
-        # i+j = dia1
-        # i-j+N = dia2
-        # 2i + N = 1 + 2
-        # i = 1 + 2 -N
-        # 2j = 1 - 2 +N
+
         if (di1_index + di2_index - N) % 2 == 1:
             continue
         if (di1_index - di2_index + N) % 2 == 1:
