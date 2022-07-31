@@ -11,15 +11,24 @@ for i in range(N):
 max_count = 0
 
 
-def dfs(di1, di2, di1_index, count):
-    global max_count
+def dfs(di1_index, color, count):
+    global max_count, dia1, dia2
     if max_count < count:
         max_count = count
 
-    if di1_index == 2*N:
+    if di1_index >= 2 * N:
         return
 
-    for di2_index in range(2*N):
+    for di2_index in range(N * 2):
+        # i, j
+        # i+j = dia1
+        # i-j+N = dia2
+        # 2i + N = 1 + 2
+        # i = 1 + 2 -N
+        # 2j = 1 - 2 +N
+
+        if di1_index % 2 != color:
+            continue
 
         if (di1_index + di2_index - N) % 2 == 1:
             continue
@@ -30,18 +39,25 @@ def dfs(di1, di2, di1_index, count):
 
         if not (0 <= i < N and 0 <= j < N):
             continue
+
         if arr[i][j] == 0:
             continue
 
-        if not di2[di2_index] and not di1[di1_index]:
-            di1[di1_index] = di2[di2_index] = True
-            count += 1
-            dfs(di1, di2, di1_index + 1, count)
-            count -= 1
-            di1[di1_index] = di2[di2_index] = False
-    dfs(di1, di2, di1_index + 1, count)
+        if dia2[di2_index] or dia1[di1_index]:
+            continue
+
+        dia1[di1_index] = dia2[di2_index] = True
+        dfs(di1_index + 2, color, count + 1)
+        dia1[di1_index] = dia2[di2_index] = False
+    dfs(di1_index + 2, color, count)
 
 
-dfs([False for _ in range(2 * N)], [False for _ in range(2 * N)], 0, 0)
+dia1 = [False for _ in range(2 * N)]
+dia2 = [False for _ in range(2 * N)]
 
-print(max_count)
+dfs(0, 0, 0)
+t = max_count
+max_count = 0
+dfs(1, 1, 0)
+
+print(max_count + t)
